@@ -1,42 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { getAuth, baseUrl, removeAuth } from '../utils';
-import Strapi from 'strapi-sdk-javascript';
-const strapi = new Strapi(baseUrl);
-let auth = false;
-
+import { getAuth } from '../utils';
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const [state, setstate] = useState(true);
-  const jwtAuth = async () => {
-    if (getAuth() !== null) {
-      try {
-        await strapi.axios
-          .get('users/me', {
-            headers: {
-              Authorization: `Bearer ${getAuth().jwt}`
-            }
-          })
-          .then(res => {
-            auth = true;
-          })
-          .catch(error => {
-            auth = false;
-          });
-      } catch (error) {
-        auth = false;
-      }
-      if (!auth) {
-        removeAuth();
-      }
-      setstate(auth);
-    }
-  };
-  jwtAuth();
+  // Strapi Does The JWT varification by itself in its API calls. No need to verify manually
+  // const state = useSelector(state =>
+  //   state.auth.jwt_auth ? state.auth.jwt_auth : null
+  // );
+
+  const isAuth = getAuth() !== null ? true : false;
+
   return (
     <Route
       {...rest}
       render={props =>
-        state ? (
+        isAuth ? (
           <Component {...props} />
         ) : (
           <Redirect

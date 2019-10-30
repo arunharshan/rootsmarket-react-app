@@ -22,18 +22,27 @@ const act_add_cart = data => async dispatch => {
   dispatch({ type: CART_LOADING });
   const customer_id = getAuth() ? getAuth().user._id : null;
   setLocalCart(data);
+
   const userCartbyId = await strapi.axios.get(
     `carts?customer_id=${customer_id}`
   );
   if (customer_id) {
     if (userCartbyId.data.length > 0) {
-      const deleteUserCart = await strapi.axios.delete(
-        `carts/${userCartbyId.data[0].id}`
+      const deleteUserCart = await strapi.axios.put(
+        `carts/${userCartbyId.data[0].id}`,
+        { cart: [] }
       );
+      // const deleteUserCart = await strapi.axios.delete(
+      //   `carts/${userCartbyId.data[0].id}`
+      // );
     }
     try {
       await strapi.axios
-        .post(`carts`, { cart: getLocalCart(), customer_id: customer_id })
+        .put(`carts/${userCartbyId.data[0].id}`, {
+          cart: getLocalCart(),
+          customer_id: customer_id
+        })
+        // .post(`carts`, { cart: getLocalCart(), customer_id: customer_id })
         .then(res => {
           if (res.data.cart.length > 0 || res.data.cart > 0) {
             dispatch({ type: CART_ADD, payload: res.data.cart });
@@ -94,23 +103,23 @@ const act_fetch_cart = () => async dispatch => {
   }
 };
 
-const delete_cart = () => async dispatch => {
+const clear_cart = () => async dispatch => {
   const customer_id = getAuth() ? getAuth().user._id : null;
   try {
     const res = await strapi.axios.get(`carts?customer_id=${customer_id}`);
-    if (typeof res.data[0] !== 'undefined') {
+    if (res.status == 200) {
       await strapi.axios
-        .delete(`carts/${res.data[0]._id}`)
+        .put(`carts/${res.data[0]._id}`, { cart: [] })
         .then(res => {
           dispatch({ type: CART_REMOVE, payload: [] });
         })
         .catch(error => {
-          dispatch({ type: CART_ERROR, payload: 'Unable to delete cart' });
+          dispatch({ type: CART_ERROR, payload: 'Unable to clear cart' });
         });
     }
   } catch (error) {
-    dispatch({ type: CART_ERROR, payload: 'Unable to delete cart' });
+    dispatch({ type: CART_ERROR, payload: 'Unable to clear cart' });
   }
 };
 
-export { act_fetch_cart, act_add_cart, delete_cart };
+export { act_fetch_cart, act_add_cart, clear_cart };

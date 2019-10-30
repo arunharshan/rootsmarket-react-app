@@ -9,7 +9,8 @@ import {
   SIGN_OUT,
   ADDRESSBOOK,
   ADDRESSBOOK_SET,
-  ADDRESSBOOK_ERROR
+  ADDRESSBOOK_ERROR,
+  JWT_AUTH
 } from './types';
 import { baseUrl, getAuth } from '../../utils';
 const _ = require('lodash');
@@ -110,6 +111,34 @@ const act_fetch_address = () => async dispatch => {
   }
 };
 
+const act_jwt_auth = () => async dispatch => {
+  const jwt = getAuth() && getAuth().jwt ? getAuth().jwt : null;
+  try {
+    await strapi.axios
+      .get('users/me', {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
+      .then(res => {
+        if (res.status == 200) {
+          dispatch({ type: JWT_AUTH, payload: true });
+        } else {
+          dispatch({ type: JWT_AUTH, payload: false });
+        }
+      })
+      .catch(error => {
+        dispatch({ type: JWT_AUTH, payload: false });
+      });
+  } catch (error) {
+    dispatch({ type: JWT_AUTH, payload: false });
+  }
+  // if (!auth) {
+  //   removeAuth();
+  // }
+  // setstate(auth);
+};
+
 const act_signout = () => dispatch => {
   dispatch({ type: SIGN_OUT });
 };
@@ -119,5 +148,6 @@ export {
   act_signup,
   act_signout,
   act_set_address,
-  act_fetch_address
+  act_fetch_address,
+  act_jwt_auth
 };

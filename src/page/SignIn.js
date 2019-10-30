@@ -11,16 +11,14 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const auth_state = useSelector(state => state.auth);
 
-  // dont show login page if authenticated and re-router to the prev screen
+  // dont show login page if user is authenticated
+  // NOTE: no need to pass the JWT token varification since Strapi does it by itself.
+  // useEffect(() => {
+  //   dispatch(act_jwt_auth());
+  // }, []);
 
-  if (getAuth() !== null) {
-    if (typeof history.location.state !== 'undefined') {
-      console.log(history.location.state.from.pathname);
-
-      history.push(history.location.state.from.pathname);
-    } else {
-      history.push('/cart');
-    }
+  if (getAuth()) {
+    history.push('/cart');
   }
 
   const submitHandler = inputs => {

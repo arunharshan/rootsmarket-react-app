@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Spinner, Form } from 'react-bootstrap';
 
 import ToastMessage from '../components/ToastMessage';
@@ -9,21 +9,24 @@ import Address from '../components/accounts/Address';
 import CartTotal from '../components/CartTotal';
 import Cart from './Cart';
 import StripePayment from '../components/accounts/StripePayment';
-import $ from 'jquery';
-import { baseUrl, getAuth, baseUrlApp } from '../utils';
+import { baseUrl, baseUrlApp, getAuth } from '../utils';
 import {
   act_set_address,
   act_fetch_address
 } from '../store/actions/accountsAction';
-import { delete_cart } from '../store/actions/cartAction';
+import { clear_cart } from '../store/actions/cartAction';
 const strapi = new Strapi(baseUrl);
-
 const Checkout = () => {
   const history = useHistory();
-  if (getAuth() == null) {
-    history.push('/sign-in');
-  }
-  const auths = getAuth() ? getAuth().user : null;
+  const dispatch = useDispatch();
+  const cart = useSelector(state => state.cart);
+  const addressbook = useSelector(state => state.auth.address);
+  const [userInfo, setUserInfo] = useState({});
+
+  // Strapi Does The JWT varification by itself in its API calls. No need to verify manually
+
+  //const auths = useSelector(state => (state.auth ? state.auth : null));
+  const auths = getAuth() && getAuth().user;
   const [stripeToken, setStripeToken] = useState(null);
   const [validated, setValidated] = useState(false);
   const [hasToken, setHasToken] = useState(false);
@@ -32,12 +35,6 @@ const Checkout = () => {
   const [message, setMessage] = useState({ show: false });
   const [hasCart, setHasCart] = useState(false);
   const [shippingCost, setShippingCost] = useState(0);
-
-  const dispatch = useDispatch();
-  const cart = useSelector(state => state.cart);
-  const addressbook = useSelector(state => state.auth.address);
-  const { product } = useSelector(state => state);
-  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     dispatch(act_fetch_address());
@@ -50,7 +47,7 @@ const Checkout = () => {
       purchase_date: new Date(Date.now()),
       cart: [{}],
       amount: null,
-      token: null
+      cc_token: null
     });
     if (addressbook && addressbook.address !== null) {
       const address = addressbook.address;
@@ -70,7 +67,7 @@ const Checkout = () => {
     setStripeToken(value);
     setUserInfo(values => ({
       ...values,
-      token: value
+      cc_token: value
     }));
   };
   useEffect(() => {
@@ -98,11 +95,11 @@ const Checkout = () => {
   };
 
   useEffect(() => {
-    if (userInfo.token) {
+    if (userInfo.cc_token) {
       setHasToken(false);
       // call the backend api dispatch from here...
     }
-  }, [userInfo.token, stripeToken]);
+  }, [userInfo.cc_token, stripeToken]);
 
   const onChangeHandler = e => {
     e.persist();
@@ -122,19 +119,15 @@ const Checkout = () => {
   const submitHandler = async e => {
     e.preventDefault();
     setIsLoading(true);
-    setMessage({ show: false });
-
+    setMessage(values => ({ ...values, show: false }));
     const form = e.currentTarget;
     !stripeToken && setHasToken(true);
     if (form.checkValidity() && stripeToken && userInfo.user_id) {
       try {
         // update or add address
-
         dispatch(act_set_address(userInfo));
-
         // store data into the Order database and sent data to Straip payment (orders controller)
         const res = await strapi.createEntry('Orders', userInfo);
-
         if (res._id) {
           setMessage({
             show: true,
@@ -146,7 +139,7 @@ const Checkout = () => {
           setTimeout(function() {
             history.push(`/thank-you/${userInfo.name}/${res._id}`);
           }, 2000);
-          dispatch(delete_cart()); // delete local and database cart
+          dispatch(clear_cart()); // clear local and database cart
         } else {
           setMessage({
             show: true,
@@ -159,7 +152,6 @@ const Checkout = () => {
           setIsLoading(false);
         }, 1000);
       } catch (error) {
-        console.log(error);
         setMessage({
           show: true,
           text: 'Something went wrong. Please try again',
@@ -171,6 +163,11 @@ const Checkout = () => {
         }, 1000);
       }
     } else {
+      setMessage({
+        show: true,
+        text: `Could not place the order. Please try again.`,
+        type: 'error'
+      });
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
@@ -194,7 +191,7 @@ const Checkout = () => {
         <hr/>
         <h3 class="lead">Your order number <strong>#${order_id}</strong></h3>
         <h3 class="lead">Total Amount Paid $${userInfo.amount}</h3>
-        <p>Credit Card Transaction number #${userInfo.token}</p> 
+        <p>Credit Card Transaction number #${userInfo.cc_token}</p> 
         <h3 class="lead">Shipping Address</h3>
         <h3 class="lead">${userInfo.address},${userInfo.city}, ${userInfo.state},${userInfo.zipcode}</h3>
         <hr/>
@@ -205,7 +202,7 @@ const Checkout = () => {
         // console.log(response);
       })
       .catch(function(error) {
-        // console.log(error.response);
+        // console.log('email-', error.response);
       });
   };
 

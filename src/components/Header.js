@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, link } from 'react-router-dom';
 import { act_signout } from '../store/actions/accountsAction';
-import { getAuth, baseUrl } from '../utils';
+import { getAuth } from '../utils';
 import $ from 'jquery';
 
 const Header = () => {
@@ -18,12 +18,15 @@ const Header = () => {
     history.location.pathname.indexOf('/category/') == 0 ? true : false;
 
   useEffect(() => {
+    //const abortController = new AbortController();
     $(window).scroll(function(e) {
       var scrollTop = $(window).scrollTop();
       let nav = headerRef.current;
       nav = $(nav).height();
       scrollTop > nav ? setNavbg('header-theme') : setNavbg(null);
     });
+
+    // return () => abortController.abort();
   }, []);
 
   return (

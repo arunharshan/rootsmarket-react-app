@@ -63,7 +63,6 @@ export default (state = initialState, action) => {
       };
     case CART_REMOVE:
       setLocalCart([]);
-      console.log('cart deleted');
       return {
         ...state,
         data: action.payload,

@@ -8,7 +8,8 @@ import {
   SIGN_OUT,
   ADDRESSBOOK,
   ADDRESSBOOK_SET,
-  ADDRESSBOOK_ERROR
+  ADDRESSBOOK_ERROR,
+  JWT_AUTH
 } from '../actions/types';
 
 import { setAuth, removeAuth, getAuth } from '../../utils';
@@ -21,6 +22,7 @@ const initialState = {
   signup_loading: false,
   signup_error: null,
   signout: false,
+  jwt_auth: null,
   address: {
     address: null,
     address_flag: false,
@@ -34,6 +36,7 @@ export default (state = initialState, action) => {
       setAuth(action.payload); // or by default stpapi sets jwt token
       return {
         signin: action.payload,
+        jwt_auth: true,
         signin_loading: false,
         signin_error: null
       };
@@ -41,6 +44,7 @@ export default (state = initialState, action) => {
       removeAuth();
       return {
         signin_loading: false,
+        jwt_auth: false,
         signin_error: action.payload
       };
     case SIGN_IN_LOADING:
@@ -52,6 +56,7 @@ export default (state = initialState, action) => {
       setAuth(action.payload); // or by default stpapi sets jwt token
       return {
         signup: action.payload,
+        jwt_auth: true,
         signup_loading: false,
         signup_error: null
       };
@@ -59,6 +64,7 @@ export default (state = initialState, action) => {
       removeAuth();
       return {
         signin: null,
+        jwt_auth: false,
         signup_loading: false,
         signup_error: action.payload
       };
@@ -71,6 +77,11 @@ export default (state = initialState, action) => {
       removeAuth();
       return {
         signout: true
+      };
+    case JWT_AUTH:
+      return {
+        ...state,
+        jwt_auth: action.payload
       };
     case ADDRESSBOOK:
       return {

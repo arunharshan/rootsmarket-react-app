@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
@@ -12,19 +12,15 @@ const Register = () => {
   const dispatch = useDispatch();
   const auth_state = useSelector(state => state.auth);
 
-  // dont show login page if authenticated and re-router to the prev screen
-  if (getAuth() !== null) {
+  // dont show login page if user is authenticated
+  // useEffect(() => {
+  //   dispatch(act_jwt_auth());
+  // }, []);
+
+  // NOTE: no need to pass the JWT token varification since Strapi does it by itself.
+
+  if (getAuth()) {
     history.push('/cart');
-    // if (history.location.state.from.pathname == '/checkout') {
-    //   history.push('/checkout');
-    // } else {
-    //   history.push('/cart');
-    // }
-    // if (typeof history.location.state == 'undefined') {
-    //   history.push('/cart');
-    // } else {
-    //   history.push(history.location.state.from.pathname);
-    // }
   }
 
   const submitHandler = async inputs => {

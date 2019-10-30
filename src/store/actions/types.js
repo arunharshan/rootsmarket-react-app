@@ -17,6 +17,8 @@ export const SIGN_IN_LOADING = 'SIGN_IN_LOADING';
 export const SIGN_IN_ERROR = 'SIGN_IN_ERROR';
 export const SIGN_OUT = 'SIGN_OUT';
 
+export const JWT_AUTH = 'JWT_AUTH';
+
 // address book
 export const ADDRESSBOOK = 'ADDRESSBOOK';
 export const ADDRESSBOOK_SET = 'ADDRESSBOOK_SET';

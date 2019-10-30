@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useHistory, Link } from 'react-router-dom';
-import { Col, Container, Row, Tabs, Tab, Spinner } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 
 import PropTypes from 'prop-types';
-
-import Quantity from '../components/Quantity';
-import TooltipHoc from '../components/TooltipHoc';
 
 import CartItem from '../components/CartItem';
 import CartTotal from '../components/CartTotal';
@@ -15,12 +12,7 @@ import ToastMessage from '../components/ToastMessage';
 
 import { act_fetch_a_product } from '../store/actions/productsAction';
 
-import {
-  act_fetch_cart,
-  act_update_cart,
-  act_remove_cart,
-  act_add_cart
-} from '../store/actions/cartAction';
+import { act_fetch_cart } from '../store/actions/cartAction';
 
 const Cart = ({ cartsize }) => {
   const history = useHistory();
