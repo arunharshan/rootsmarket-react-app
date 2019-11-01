@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useRef, useEffect } from 'react';
 import { Image } from 'react-bootstrap';
 import $ from 'jquery';

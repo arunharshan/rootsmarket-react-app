@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { DropdownButton, Dropdown, Image, Button } from 'react-bootstrap';
 import React, { useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';

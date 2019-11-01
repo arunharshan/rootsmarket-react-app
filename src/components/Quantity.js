@@ -1,5 +1,5 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
-
 const Quantity = ({ oldQty, newQty }) => {
   const [qty, setQty] = useState(null);
 
@@ -29,7 +29,7 @@ const Quantity = ({ oldQty, newQty }) => {
             <i className='fas fa-minus'></i>
           </button>
         </div>
-       
+
         <input
           min='1'
           max='10'

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Toast, Image } from 'react-bootstrap';
 import { baseUrl } from '../utils';

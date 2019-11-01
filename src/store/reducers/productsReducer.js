@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   FEATURED_FETCH,
   FEATURED_ERROR,

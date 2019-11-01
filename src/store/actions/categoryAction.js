@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   CATEGORY_FETCH,
   CATEGORY_ERROR,

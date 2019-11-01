@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { combineReducers } from 'redux';
 import accounts from './accountsReducer';
 import { category, categories } from './categoryReducer';

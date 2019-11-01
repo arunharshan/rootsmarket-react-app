@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   SERVICE_FETCH,
   SERVICE_ERROR,

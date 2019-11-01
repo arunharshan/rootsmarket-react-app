@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Row, Container, Col, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';

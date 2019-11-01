@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { FETCH_SEARCH, ERROR_MESSAGE, LOADING } from './types';
 import axios from 'axios';
 

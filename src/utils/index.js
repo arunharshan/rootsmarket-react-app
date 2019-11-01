@@ -1,3 +1,4 @@
+/* eslint-disable */
 const AUTH_KEY = 'jwt';
 const ROOTS_CART = 'roots_market_cart';
 const GUEST_ID = 'guest_id';

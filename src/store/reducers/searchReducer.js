@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { FETCH_SEARCH, ERROR_MESSAGE, LOADING } from '../actions/types';
 import { setAuth, removeAuth } from '../../utils';
 const initialState = {

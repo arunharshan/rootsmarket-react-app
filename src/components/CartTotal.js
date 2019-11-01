@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ToastMessage from '../components/ToastMessage';
@@ -47,14 +48,14 @@ const CartTotal = ({ promo, shipping, finalAount }) => {
         setSubTotal(subAmt);
         setOrderTotal(subAmt + percentage + ship);
         setTax(percentage);
-        finalAount((subAmt + percentage + ship).toFixed(2))
+        finalAount((subAmt + percentage + ship).toFixed(2));
       } else {
         setSubTotal(0);
         setOrderTotal(0);
         setTax(0);
       }
     } catch (error) {
-     // console.log(error);
+      // console.log(error);
     }
   }, [cart, percentage, ship]);
 

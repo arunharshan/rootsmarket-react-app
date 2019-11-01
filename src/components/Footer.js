@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Image } from 'react-bootstrap';
 import React from 'react';
 import { currentYear, baseUrl } from '../utils';

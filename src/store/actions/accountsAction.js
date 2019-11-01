@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Strapi from 'strapi-sdk-javascript/build/main';
 import {
   SIGN_UP,

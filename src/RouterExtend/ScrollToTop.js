@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { withRouter } from 'react-router-dom';
 const ScrollToTop = props => {
   window.scrollTo(0, 0);

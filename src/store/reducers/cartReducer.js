@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   CART_ADD,
   CART_ERROR,
